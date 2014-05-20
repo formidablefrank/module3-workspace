@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/util
+    	http://www.springframework.org/schema/util/spring-util.xsd
+    	">
+    	
+	<!-- 
+		Setter injection does not enforce required dependencies.
+		It's possible to construct the bean even if no dependencies
+		are required.
+		
+		Setter injection can enforce naming.
+		What if we have a bean that uses fields that have identical types?
+		e.g. two ProductDao beans that point to two different databases
+		There is a risk if we do constructor injection because someone
+		might inadvertently switch the order when editing the xml.
+		
+		With setter injection, specifying the properties in the wrong order has no effect.
+	 -->
+	<bean id="mr-bean" class="com.example.HelloMessageEnglish">
+		<property name="message" value="Hello World!"/>
+	</bean>
+	
+	<!-- 
+		Constructor injection enforces the presence of necessary dependencies
+		since the bean cannot be constructed unless all the parameters
+		of the constructor can be satisfied.
+		
+		Allow only one constructor to be present.
+		
+	 -->
+	<bean id="clousseau" class="com.example.HelloMessageFrench">
+		<constructor-arg value="Bonjour tout le monde!"/>
+	</bean>
+	
+	<bean id="chipmunks" class="com.example.Chipmunks">
+		<property name="names" ref="names-of-chipmunks"/>
+	</bean>
+	
+	<bean id="alvin-name" class="java.lang.String">
+		<constructor-arg value="Alvin"></constructor-arg>
+	</bean>
+	
+	<bean id="chipmunks-orig" class="com.example.Chipmunks">
+		<property name="names">
+			<list>
+				<ref bean="alvin-name"/>
+				<value>Simon</value>
+				<value>Theodore</value>
+			</list>
+		</property>
+	</bean>
+	
+    <util:list id="names-of-chipmunks" value-type="java.lang.String">
+    	<ref bean="alvin-name"/>
+    	<value>Simon</value>
+    	<value>Theodore</value>
+    </util:list>
+    
+    <util:list id="names-of-stooges" value-type="java.lang.String">
+    	<value>Moe</value>
+    	<value>Larry</value>
+    	<value>Curly</value>
+    </util:list>
+	
+	<bean id="usStates" class="com.example.USStates">
+		<property name="stateNames">
+			<props>
+				<prop key="VA">Virginia</prop>
+				<prop key="NY">New York</prop>
+				<prop key="TX">Texas</prop>
+				<prop key="CA">California</prop>
+				<prop key="AZ">Arizona</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="stooges" class="com.example.Stooges">
+		<property name="names" ref="names-of-stooges"/>
+	</bean>
+	
+	<bean id="characters" class="com.example.Characters">
+		<property name="characters" ref="characterMap"/>
+	</bean>
+	
+	<util:map id="characterMap">
+		<entry>
+			<key>
+				<value>chipmunks</value>
+			</key>
+			<ref bean="names-of-chipmunks"/>
+		</entry>
+		<entry>
+			<key>
+				<value>stooges</value>
+			</key>
+			<ref bean="names-of-stooges"/>
+		</entry>
+	</util:map>
+
+</beans>
+
+<!-- creating the spring container with beans-->
+
+<!-- dynamic beans should not be in the application context 
+	e.g. category list-->
