@@ -8,6 +8,14 @@ public class HelloMessageEnglish implements HelloMessage {
 	
 	private String message;
 
+	public HelloMessageEnglish (){
+		this.message = "The quick brown fox";
+	}
+	
+	void upCase(){
+		this.message = this.message.toUpperCase();
+	}
+	
 	@Override
 	public String getMessage() {
 		return message;

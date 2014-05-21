@@ -22,8 +22,8 @@
 		
 		With setter injection, specifying the properties in the wrong order has no effect.
 	 -->
-	<bean id="mr-bean" class="com.example.HelloMessageEnglish">
-		<property name="message" value="Hello World!"/>
+	<bean id="mr-bean" class="com.example.HelloMessageEnglish" init-method="upCase">
+		<!-- <property name="message" value="Hello World!"/> -->
 	</bean>
 	
 	<!-- 
@@ -38,34 +38,26 @@
 		<constructor-arg value="Bonjour tout le monde!"/>
 	</bean>
 	
-	<bean id="chipmunks" class="com.example.Chipmunks">
-		<property name="names" ref="names-of-chipmunks"/>
-	</bean>
-	
-	<bean id="alvin-name" class="java.lang.String">
-		<constructor-arg value="Alvin"></constructor-arg>
-	</bean>
-	
 	<bean id="chipmunks-orig" class="com.example.Chipmunks">
 		<property name="names">
 			<list>
-				<ref bean="alvin-name"/>
+				<value>Alvin</value>
 				<value>Simon</value>
 				<value>Theodore</value>
 			</list>
 		</property>
 	</bean>
-	
-    <util:list id="names-of-chipmunks" value-type="java.lang.String">
-    	<ref bean="alvin-name"/>
-    	<value>Simon</value>
-    	<value>Theodore</value>
-    </util:list>
     
     <util:list id="names-of-stooges" value-type="java.lang.String">
     	<value>Moe</value>
     	<value>Larry</value>
     	<value>Curly</value>
+    </util:list>
+    
+    <util:list id="names-of-chipmunks" value-type="java.lang.String">
+    	<value>Alvin</value>
+    	<value>Simon</value>
+    	<value>Theodore</value>
     </util:list>
 	
 	<bean id="usStates" class="com.example.USStates">
@@ -102,6 +94,24 @@
 			<ref bean="names-of-stooges"/>
 		</entry>
 	</util:map>
+	
+	<bean id="config.properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>config.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="chipmunks"
+		class="com.example.Chipmunks">
+		<property name="names">
+			<list>
+				<value>${name.alvin}</value>
+				<value>${name.simon}</value>
+				<value>${name.theodore}</value>
+			</list>
+		</property>
+	</bean>
 
 </beans>
 
