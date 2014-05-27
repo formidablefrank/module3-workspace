@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/util
+    	http://www.springframework.org/schema/util/spring-util.xsd
+    	http://www.springframework.org/schema/tx
+    	http://www.springframework.org/schema/tx/spring-tx.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <context:annotation-config/>
+
+	 <context:component-scan base-package="com.example" use-default-filters="true">
+	 	<context:exclude-filter 
+	 		type="annotation" 
+	 		expression="org.springframework.stereotype.Controller"/>
+	 </context:component-scan>
+	 
+	<tx:annotation-driven />
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/shoppingcart" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+	
+	
+	<bean name="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5InnoDBDialect
+				</prop>
+				<!-- validate | update | create | create-drop -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- disable the second-level cache -->
+				<prop key="hibernate.cache.provider_class">
+					org.hibernate.cache.NoCacheProvider
+				</prop>
+			</props>
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.example.model.User</value>
+				<value>com.example.model.Role</value>
+				<value>com.example.model.Inventory</value>
+				<value>com.example.model.Product</value>
+				<value>com.example.model.Category</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean name="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userDao" class="com.example.dao.user.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="productDao" class="com.example.dao.product.ProductDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="categoryDao" class="com.example.dao.category.CategoryDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="inventoryDao" class="com.example.dao.inventory.InventoryDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="cartDao" class="com.example.dao.cart.CartDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+</beans>
