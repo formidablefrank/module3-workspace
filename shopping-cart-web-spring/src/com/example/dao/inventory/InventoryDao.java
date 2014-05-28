@@ -9,5 +9,6 @@ import com.example.dao.DaoException;
 
 public interface InventoryDao {
 	Inventory getInventory(Category category) throws SQLException, DaoException;
+	Integer getAvailableQty(Product pro) throws SQLException, DaoException;
 	void decreaseSupply(Product product, int quantity) throws SQLException, DaoException;
 }

@@ -1,6 +1,7 @@
 package com.example.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tbl_order")
@@ -19,6 +21,7 @@ public class Cart {
 	private Long id;
 	private User user;
 	private BigDecimal amount;
+	@Transient private List<OrderDetail> orders;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -93,5 +96,13 @@ public class Cart {
 	}
 	public Cart() {
 		super();
+	}
+	
+	@Transient
+	public List<OrderDetail> getOrders() {
+		return orders;
+	}
+	public void setOrders(List<OrderDetail> orders) {
+		this.orders = orders;
 	}
 }

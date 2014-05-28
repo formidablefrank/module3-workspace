@@ -53,9 +53,10 @@
 			<list>
 				<value>com.example.model.User</value>
 				<value>com.example.model.Role</value>
-				<value>com.example.model.Inventory</value>
 				<value>com.example.model.Product</value>
 				<value>com.example.model.Category</value>
+				<value>com.example.model.Cart</value>
+				<value>com.example.model.OrderDetail</value>
 			</list>
 		</property>
 	</bean>

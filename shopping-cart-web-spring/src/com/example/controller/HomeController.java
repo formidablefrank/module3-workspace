@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.model.Cart;
 import com.example.model.Category;
 import com.example.model.Inventory;
 import com.example.model.Product;
@@ -20,12 +21,14 @@ import com.example.model.User;
 import com.example.service.ServiceException;
 import com.example.service.login.LoginService;
 import com.example.service.admin.AdminService;
+import com.example.service.cust.CustomerService;
 
 @Controller
 public class HomeController {
 	
 	@Autowired LoginService loginService;
 	@Autowired AdminService adminService;
+	@Autowired CustomerService customerService;
 	
 	@RequestMapping(value = "/home")
 	public String home(
@@ -204,6 +207,35 @@ public class HomeController {
 			request.setAttribute("errorMsg", e.getMessage());
 		}
 		return "cust";
+	}
+	
+	@RequestMapping("/viewCart")
+	private String viewCart(
+			HttpServletRequest request
+			){
+		User user;
+		Cart cart;
+		try {
+			user = loginService.getUser((String) request.getSession().getAttribute("username"));
+			cart = customerService.getCartFromUser(user);
+			request.setAttribute("cart", cart);
+		} catch (ServiceException e) {
+			request.setAttribute("errorMsg", e.getMessage());
+		}
+		return "viewCart";
+	}
+	
+	@RequestMapping("/clearCart")
+	private String clearCart(HttpServletRequest request){
+		User user;
+		try {
+			user = loginService.getUser((String) request.getSession().getAttribute("username"));
+			customerService.clearCart(user);
+			request.setAttribute("successMsg", "Success!");
+		} catch (ServiceException e) {
+			request.setAttribute("errorMsg", e.getMessage());
+		}
+		return "forward:/viewCart";
 	}
 	
 }

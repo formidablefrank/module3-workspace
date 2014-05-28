@@ -45,4 +45,16 @@ public class InventoryDaoImpl implements InventoryDao{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@SuppressWarnings("unchecked")
+	public Integer getAvailableQty(Product pro) throws SQLException, DaoException {
+		Session session = sessionFactory.getCurrentSession();
+		List<Product> products = session.createQuery("FROM Product pro").list();
+		List<Object> quantities = session.createSQLQuery("SELECT fld_inventory_qty FROM tbl_product").list();
+		LinkedHashMap<Product, Integer> inventory = new LinkedHashMap<Product, Integer>();
+		for(int i=0; i<products.size(); i++){
+			inventory.put(products.get(i), (Integer) quantities.get(i));
+		}
+		return inventory.get(pro);
+	}
 }
